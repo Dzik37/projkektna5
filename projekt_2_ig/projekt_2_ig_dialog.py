@@ -55,10 +55,9 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
     def calculate_dh(self):
         selected_layer = self.mMapLayerComboBox.currentLayer()
         features = selected_layer.selectedFeatures()
-        if len(features) < 2:
+        if len(features) != 2:
             self.label_dh_result.setText("Wybierz dokładnie dwa punkty!")
-        elif len(features) > 3:
-            self.label_dh_result.setText("Wybierz dokładnie dwa punkty!")
+
         else:
             h_1 = float(features[0]['wysokosc'])
             h_2 = float(features[1]['wysokosc'])
