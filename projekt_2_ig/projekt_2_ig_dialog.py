@@ -66,43 +66,118 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
             dh = h_2 - h_1 
             self.label_dh_result.setText(f'{dh}m')
 
-    def oblicz_pole(self):
-        selected_layer = self.mMapLayerComboBox.currentLayer()
-        features = selected_layer.selectedFeatures()
-        wsp_x = []
-        wsp_y = []
-        for feature in features:
-            geom = feature.geometry()
-            point = geom.asPoint()
-            wsp_x.append(float(point.x()))
-            wsp_y.append(float(point.y()))
+    # def oblicz_pole(self):
+    #     selected_layer = self.mMapLayerComboBox.currentLayer()
+    #     features = selected_layer.selectedFeatures()
+    #     wsp_x = []
+    #     wsp_y = []
+    #     for feature in features:
+    #         geom = feature.geometry()
+    #         point = geom.asPoint()
+    #         wsp_x.append(float(point.x()))
+    #         wsp_y.append(float(point.y()))
             
-        if len(wsp_x) < 3:
-            self.label_pole_result.setText("Wybierz co najmniej 3 punkty!")
-        else:
-            coords = list(zip(wsp_x, wsp_y))
+    #     if len(wsp_x) < 3:
+    #         self.label_pole_result.setText("Wybierz co najmniej 3 punkty!")
+    #     else:
+    #         coords = list(zip(wsp_x, wsp_y))
                 
-            n = len(coords)
-            suma = 0
+    #         n = len(coords)
+    #         suma = 0
             
-            for i in range(n):
-                x1, y1 = coords[i]
-                x2, y2 = coords[(i + 1) % n]
-                suma += x1 * y2 - x2 * y1
+    #         for i in range(n):
+    #             x1, y1 = coords[i]
+    #             x2, y2 = coords[(i + 1) % n]
+    #             suma += x1 * y2 - x2 * y1
             
-            pole_m2 = 0.5 * abs(suma)
-            pole_a = pole_m2 / 100
-            pole_ha = pole_m2 / 10000 
-            self.label_pole_result.setText(f'{pole_m2} m² ')
+    #         pole_m2 = 0.5 * abs(suma)
+    #         pole_a = pole_m2 / 100
+    #         pole_ha = pole_m2 / 10000 
+    #         self.label_pole_result.setText(f'{pole_m2} m² ')
         
-        # def onCheckBoxChanged(self, state):
-        #     if state == QtCore.Qt.Checked:
-        #         if self.checkBox_m2.isChecked():
-        #             self.label_pole_result.setText(f'{pole_m2} m²')
-        #         elif self.checkBox_a.isChecked():
-        #             self.label_pole_result.setText(f'{pole_a} a ')
-        #         elif self.checkBox_ha.isChecked():
-        #             self.label_pole_result.setText(f'{pole_ha} ha')
+    def oblicz_pole(self, state):
+            if self.checkBox_m2.isChecked():
+                selected_layer = self.mMapLayerComboBox.currentLayer()
+                features = selected_layer.selectedFeatures()
+                wsp_x = []
+                wsp_y = []
+                for feature in features:
+                    geom = feature.geometry()
+                    point = geom.asPoint()
+                    wsp_x.append(float(point.x()))
+                    wsp_y.append(float(point.y()))
+                    
+                if len(wsp_x) < 3:
+                    self.label_pole_result.setText("Wybierz co najmniej 3 punkty!")
+                else:
+                    coords = list(zip(wsp_x, wsp_y))
+                        
+                    n = len(coords)
+                    suma = 0
+                    
+                    for i in range(n):
+                        x1, y1 = coords[i]
+                        x2, y2 = coords[(i + 1) % n]
+                        suma += x1 * y2 - x2 * y1
+                    
+                    pole_m2 = 0.5 * abs(suma)
+                    self.label_pole_result.setText(f'{round(pole_m2,3)} m² ')
+                    
+            elif self.checkBox_ary.isChecked():
+                selected_layer = self.mMapLayerComboBox.currentLayer()
+                features = selected_layer.selectedFeatures()
+                wsp_x = []
+                wsp_y = []
+                for feature in features:
+                    geom = feature.geometry()
+                    point = geom.asPoint()
+                    wsp_x.append(float(point.x()))
+                    wsp_y.append(float(point.y()))
+                    
+                if len(wsp_x) < 3:
+                    self.label_pole_result.setText("Wybierz co najmniej 3 punkty!")
+                else:
+                    coords = list(zip(wsp_x, wsp_y))
+                        
+                    n = len(coords)
+                    suma = 0
+                    
+                    for i in range(n):
+                        x1, y1 = coords[i]
+                        x2, y2 = coords[(i + 1) % n]
+                        suma += x1 * y2 - x2 * y1
+                    
+                    pole_m2 = 0.5 * abs(suma)
+                    pole_a = pole_m2 / 100
+                    self.label_pole_result.setText(f'{round(pole_a,3)} a ')
+                
+            elif self.checkBox_ha.isChecked():
+                selected_layer = self.mMapLayerComboBox.currentLayer()
+                features = selected_layer.selectedFeatures()
+                wsp_x = []
+                wsp_y = []
+                for feature in features:
+                    geom = feature.geometry()
+                    point = geom.asPoint()
+                    wsp_x.append(float(point.x()))
+                    wsp_y.append(float(point.y()))
+                    
+                if len(wsp_x) < 3:
+                    self.label_pole_result.setText("Wybierz co najmniej 3 punkty!")
+                else:
+                    coords = list(zip(wsp_x, wsp_y))
+                        
+                    n = len(coords)
+                    suma = 0
+                    
+                    for i in range(n):
+                        x1, y1 = coords[i]
+                        x2, y2 = coords[(i + 1) % n]
+                        suma += x1 * y2 - x2 * y1
+                    
+                    pole_m2 = 0.5 * abs(suma)
+                    pole_ha = pole_m2 / 10000 
+                    self.label_pole_result.setText(f'{round(pole_ha,3)} ha ')
         
 
         
