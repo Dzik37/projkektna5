@@ -183,7 +183,7 @@
     <string>Wyczysc wyniki</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="pushButton_poligon">
    <property name="geometry">
     <rect>
      <x>180</x>
@@ -242,7 +242,7 @@
     <string>Wgraj punkty</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="label_plik">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -258,6 +258,19 @@
    </property>
    <property name="text">
     <string>Wybierz plik</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_poligon">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>410</y>
+     <width>151</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>

@@ -53,6 +53,7 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
         self.pushButton_pole.clicked.connect(self.oblicz_pole)
         self.pushButton_clear.clicked.connect(self.czysc)
         self.mQgsFileWidget.fileChanged.connect(self.wczytywanie_pliku)
+        self.pushButton_poligon.clicked.connect(self.poligon)
 
         
         
@@ -196,14 +197,42 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
         layer.updateFields()
         
         feature = QgsFeature()
-        feature.setGeometry(QgsGeometry.fromPointXY(QgsPointXY(19.9449799, 50.0646501)))  # Przykładowy punkt w Krakowie
-        feature.setAttributes(['Punkt 1', 123])
-        layer_provider.addFeature(feature)
+        for x, y in zip(x_coords, y_coords):
+            feature = QgsFeature()
+            feature.setGeometry(QgsGeometry.fromPointXY(QgsPointXY(x, y)))
+            layer_provider.addFeature(feature)
+            
+        # feature.setGeometry(QgsGeometry.fromPointXY(QgsPointXY(19.9449799, 50.0646501)))  # Przykładowy punkt w Krakowie
+        # feature.setAttributes(['Punkt 1', 123])
+        # layer_provider.addFeature(feature)
 
         layer.updateExtents()
 
         
         QgsProject.instance().addMapLayer(layer)
+        
+    def poligon(self):
+          
+        selected_layer = self.mMapLayerComboBox.currentLayer()
+
+    
+        features = selected_layer.selectedFeatures()
+
+        points = []
+
+
+        for feature in features:
+            geom = feature.geometry()
+            point = geom.asPoint()
+            points.append(point)
+
+
+        polygon = QgsGeometry.fromPolygonXY([points])
+
+
+        area = polygon.area()
+
+        self.label_poligon.setText(f'Pole poligonu {area} m2')
                 
         
         
