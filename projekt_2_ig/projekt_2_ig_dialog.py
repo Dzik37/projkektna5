@@ -48,9 +48,6 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
         self.setupUi(self)
         self.pushButton_dh.clicked.connect(self.calculate_dh)
         self.pushButton_pole.clicked.connect(self.oblicz_pole)
-        # self.checkBox_m2.stateChanged.connect(self.onCheckBoxChanged)
-        # self.checkBox_ary.stateChanged.connect(self.onCheckBoxChanged)
-        # self.checkBox_ha.stateChanged.connect(self.onCheckBoxChanged)
         self.pushButton_clear.clicked.connect(self.czysc)
         
         
@@ -66,37 +63,9 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
             nr1 = features[0]['nr_punktu']
             nr2 = features[1]['nr_punktu']
             dh = h_2 - h_1 
-            self.label_dh_result.setText(f'{dh}m')
+            self.label_dh_result.setText(f'{round(dh,3)}m')
             self.label_wyb_pkt.setText(f'Wybrane punkty : {nr2},{nr1} ')
 
-    # def oblicz_pole(self):
-    #     selected_layer = self.mMapLayerComboBox.currentLayer()
-    #     features = selected_layer.selectedFeatures()
-    #     wsp_x = []
-    #     wsp_y = []
-    #     for feature in features:
-    #         geom = feature.geometry()
-    #         point = geom.asPoint()
-    #         wsp_x.append(float(point.x()))
-    #         wsp_y.append(float(point.y()))
-            
-    #     if len(wsp_x) < 3:
-    #         self.label_pole_result.setText("Wybierz co najmniej 3 punkty!")
-    #     else:
-    #         coords = list(zip(wsp_x, wsp_y))
-                
-    #         n = len(coords)
-    #         suma = 0
-            
-    #         for i in range(n):
-    #             x1, y1 = coords[i]
-    #             x2, y2 = coords[(i + 1) % n]
-    #             suma += x1 * y2 - x2 * y1
-            
-    #         pole_m2 = 0.5 * abs(suma)
-    #         pole_a = pole_m2 / 100
-    #         pole_ha = pole_m2 / 10000 
-    #         self.label_pole_result.setText(f'{pole_m2} m² ')
         
     def oblicz_pole(self, state):
             if self.checkBox_m2.isChecked():
