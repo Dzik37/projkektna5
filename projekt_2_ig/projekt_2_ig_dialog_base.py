@@ -122,6 +122,13 @@ class Ui_ProjektIG2DialogBase(object):
         self.label_2 = QtWidgets.QLabel(ProjektIG2DialogBase)
         self.label_2.setGeometry(QtCore.QRect(220, 370, 55, 16))
         self.label_2.setObjectName("label_2")
+        self.label_punkty_error = QtWidgets.QLabel(ProjektIG2DialogBase)
+        self.label_punkty_error.setGeometry(QtCore.QRect(290, 330, 291, 21))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_punkty_error.setFont(font)
+        self.label_punkty_error.setText("")
+        self.label_punkty_error.setObjectName("label_punkty_error")
 
         self.retranslateUi(ProjektIG2DialogBase)
         self.button_box.accepted.connect(ProjektIG2DialogBase.accept) # type: ignore

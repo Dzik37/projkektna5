@@ -52,9 +52,9 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
         self.pushButton_dh.clicked.connect(self.calculate_dh)
         self.pushButton_pole.clicked.connect(self.oblicz_pole)
         self.pushButton_clear.clicked.connect(self.czysc)
-        self.mQgsFileWidget.fileChanged.connect(self.wczytywanie_pliku)
+        # self.mQgsFileWidget.fileChanged.connect(self.wczytywanie_pliku)
         self.pushButton_poligon.clicked.connect(self.poligon)
-        
+        self.pushButton_punkty.clicked.connect(self.wstaw_punkty)
         
 
         
@@ -180,163 +180,184 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
         self.checkBox_ary.setChecked(False)
         self.checkBox_ha.setChecked(False)
         self.label_wyb_pkt.clear()
+        self.label_punkty_error.clear()
+        self.checkBox_2000.setChecked(False)
+        self.checkBox_1992.setChecked(False)
+        self.checkBox_strefa_5.setChecked(False)
+        self.checkBox_strefa_6.setChecked(False)
+        self.checkBox_strefa_7.setChecked(False)
+        self.checkBox_strefa_8.setChecked(False)
+        
+    
+    def wstaw_punkty(self):
+        file_path = self.mQgsFileWidget.filePath()
+        if self.checkBox_2000.isChecked() and self.checkBox_1992.isChecked():
+            self.label_punkty_error.setText('Wybierz tylko jeden układ.')
+        else:
+            if self.checkBox_1992.isChecked():
+                x_coords = []
+                y_coords = []
+                with open(file_path, 'r') as file:
+                    for line in file:
+                        parts = line.split()
+                        x = float(parts[0])
+                        y = float(parts[1])
+                        x_coords.append(x)
+                        y_coords.append(y)
+                        
+                layer = QgsVectorLayer('Point?crs=EPSG:2180', 'wgrane_punkty', 'memory')
+        
+                coords = list(zip(x_coords, y_coords))
+                n = len(coords)
+                i = 0
+        
+                layer_provider = layer.dataProvider()
+                layer_provider.addAttributes([QgsField('nr', QVariant.String), QgsField('x', QVariant.Int),QgsField('y', QVariant.Int)])
+                layer.updateFields()
+                for i in range(n):
+                    feature = QgsFeature()
+                    feature.setGeometry(QgsGeometry.fromPointXY(QgsPointXY(float(x_coords[i]), float(y_coords[i]))))
+                    feature.setAttributes([f'Punkt {i+1}', x_coords[i], y_coords[i]])
+                    layer_provider.addFeature(feature)
             
-    def wczytywanie_pliku(self, file_path):
-        if self.checkBox_1992.isChecked():
-            x_coords = []
-            y_coords = []
-            with open(file_path, 'r') as file:
-                for line in file:
-                    parts = line.split()
-                    x = float(parts[0])
-                    y = float(parts[1])
-                    x_coords.append(x)
-                    y_coords.append(y)
+                    layer.updateExtents()
+                    i += 1
+                
+                QgsProject.instance().addMapLayer(layer)
+                
+            elif self.checkBox_2000.isChecked():
+                if self.checkBox_strefa_5.isChecked() and (self.checkBox_strefa_6.isChecked() or self.checkBox_strefa_7.isChecked() or self.checkBox_strefa_8.isChecked()):
+                    self.label_punkty_error.setText('Wybierz tylko jedną strefe.')
+                elif self.checkBox_strefa_6.isChecked() and (self.checkBox_strefa_5.isChecked() or self.checkBox_strefa_7.isChecked() or self.checkBox_strefa_8.isChecked()):
+                    self.label_punkty_error.setText('Wybierz tylko jedną strefe.')
+                elif self.checkBox_strefa_7.isChecked() and (self.checkBox_strefa_5.isChecked() or self.checkBox_strefa_6.isChecked() or self.checkBox_strefa_8.isChecked()):
+                    self.label_punkty_error.setText('Wybierz tylko jedną strefe.')
+                elif self.checkBox_strefa_8.isChecked() and (self.checkBox_strefa_5.isChecked() or self.checkBox_strefa_6.isChecked() or self.checkBox_strefa_7.isChecked()):
+                    self.label_punkty_error.setText('Wybierz tylko jedną strefe.')
+                else:
+                    if self.checkBox_strefa_5.isChecked():
+                        x_coords = []
+                        y_coords = []
+                        with open(file_path, 'r') as file:
+                            for line in file:
+                                parts = line.split()
+                                x = float(parts[0])
+                                y = float(parts[1])
+                                x_coords.append(x)
+                                y_coords.append(y)
+                                
+                        layer = QgsVectorLayer('Point?crs=EPSG:2176', 'wgrane_punkty', 'memory')
+                
+                        coords = list(zip(x_coords, y_coords))
+                        n = len(coords)
+                        i = 0
+                
+                        layer_provider = layer.dataProvider()
+                        layer_provider.addAttributes([QgsField('nr', QVariant.String), QgsField('x', QVariant.Int),QgsField('y', QVariant.Int)])
+                        layer.updateFields()
+                        for i in range(n):
+                            feature = QgsFeature()
+                            feature.setGeometry(QgsGeometry.fromPointXY(QgsPointXY(float(x_coords[i]), float(y_coords[i]))))
+                            feature.setAttributes([f'Punkt {i+1}', x_coords[i], y_coords[i]])
+                            layer_provider.addFeature(feature)
                     
-            layer = QgsVectorLayer('Point?crs=EPSG:2180', 'wgrane_punkty', 'memory')
-    
-            coords = list(zip(x_coords, y_coords))
-            n = len(coords)
-            i = 0
-    
-            layer_provider = layer.dataProvider()
-            layer_provider.addAttributes([QgsField('nr', QVariant.String), QgsField('x', QVariant.Int),QgsField('y', QVariant.Int)])
-            layer.updateFields()
-            for i in range(n):
-                feature = QgsFeature()
-                feature.setGeometry(QgsGeometry.fromPointXY(QgsPointXY(float(x_coords[i]), float(y_coords[i]))))
-                feature.setAttributes([f'Punkt {i+1}', x_coords[i], y_coords[i]])
-                layer_provider.addFeature(feature)
-        
-                layer.updateExtents()
-                i += 1
-            
-            QgsProject.instance().addMapLayer(layer)
-            
-        elif self.checkBox_2000.isChecked():
-            if self.checkBox_strefa_5.isChecked():
-                x_coords = []
-                y_coords = []
-                with open(file_path, 'r') as file:
-                    for line in file:
-                        parts = line.split()
-                        x = float(parts[0])
-                        y = float(parts[1])
-                        x_coords.append(x)
-                        y_coords.append(y)
+                            layer.updateExtents()
+                            i += 1
                         
-                layer = QgsVectorLayer('Point?crs=EPSG:2176', 'wgrane_punkty', 'memory')
-        
-                coords = list(zip(x_coords, y_coords))
-                n = len(coords)
-                i = 0
-        
-                layer_provider = layer.dataProvider()
-                layer_provider.addAttributes([QgsField('nr', QVariant.String), QgsField('x', QVariant.Int),QgsField('y', QVariant.Int)])
-                layer.updateFields()
-                for i in range(n):
-                    feature = QgsFeature()
-                    feature.setGeometry(QgsGeometry.fromPointXY(QgsPointXY(float(x_coords[i]), float(y_coords[i]))))
-                    feature.setAttributes([f'Punkt {i+1}', x_coords[i], y_coords[i]])
-                    layer_provider.addFeature(feature)
-            
-                    layer.updateExtents()
-                    i += 1
-                
-                QgsProject.instance().addMapLayer(layer)
-                
-            elif self.checkBox_strefa_6.isChecked():
-                x_coords = []
-                y_coords = []
-                with open(file_path, 'r') as file:
-                    for line in file:
-                        parts = line.split()
-                        x = float(parts[0])
-                        y = float(parts[1])
-                        x_coords.append(x)
-                        y_coords.append(y)
+                        QgsProject.instance().addMapLayer(layer)
                         
-                layer = QgsVectorLayer('Point?crs=EPSG:2177', 'wgrane_punkty', 'memory')
-        
-                coords = list(zip(x_coords, y_coords))
-                n = len(coords)
-                i = 0
-        
-                layer_provider = layer.dataProvider()
-                layer_provider.addAttributes([QgsField('nr', QVariant.String), QgsField('x', QVariant.Int),QgsField('y', QVariant.Int)])
-                layer.updateFields()
-                for i in range(n):
-                    feature = QgsFeature()
-                    feature.setGeometry(QgsGeometry.fromPointXY(QgsPointXY(float(x_coords[i]), float(y_coords[i]))))
-                    feature.setAttributes([f'Punkt {i+1}', x_coords[i], y_coords[i]])
-                    layer_provider.addFeature(feature)
-            
-                    layer.updateExtents()
-                    i += 1
+                    elif self.checkBox_strefa_6.isChecked():
+                        x_coords = []
+                        y_coords = []
+                        with open(file_path, 'r') as file:
+                            for line in file:
+                                parts = line.split()
+                                x = float(parts[0])
+                                y = float(parts[1])
+                                x_coords.append(x)
+                                y_coords.append(y)
+                                
+                        layer = QgsVectorLayer('Point?crs=EPSG:2177', 'wgrane_punkty', 'memory')
                 
-                QgsProject.instance().addMapLayer(layer)
+                        coords = list(zip(x_coords, y_coords))
+                        n = len(coords)
+                        i = 0
                 
-            elif self.checkBox_strefa_7.isChecked():
-                x_coords = []
-                y_coords = []
-                with open(file_path, 'r') as file:
-                    for line in file:
-                        parts = line.split()
-                        x = float(parts[0])
-                        y = float(parts[1])
-                        x_coords.append(x)
-                        y_coords.append(y)
+                        layer_provider = layer.dataProvider()
+                        layer_provider.addAttributes([QgsField('nr', QVariant.String), QgsField('x', QVariant.Int),QgsField('y', QVariant.Int)])
+                        layer.updateFields()
+                        for i in range(n):
+                            feature = QgsFeature()
+                            feature.setGeometry(QgsGeometry.fromPointXY(QgsPointXY(float(x_coords[i]), float(y_coords[i]))))
+                            feature.setAttributes([f'Punkt {i+1}', x_coords[i], y_coords[i]])
+                            layer_provider.addFeature(feature)
+                    
+                            layer.updateExtents()
+                            i += 1
                         
-                layer = QgsVectorLayer('Point?crs=EPSG:2178', 'wgrane_punkty', 'memory')
-        
-                coords = list(zip(x_coords, y_coords))
-                n = len(coords)
-                i = 0
-        
-                layer_provider = layer.dataProvider()
-                layer_provider.addAttributes([QgsField('nr', QVariant.String), QgsField('x', QVariant.Int),QgsField('y', QVariant.Int)])
-                layer.updateFields()
-                for i in range(n):
-                    feature = QgsFeature()
-                    feature.setGeometry(QgsGeometry.fromPointXY(QgsPointXY(float(x_coords[i]), float(y_coords[i]))))
-                    feature.setAttributes([f'Punkt {i+1}', x_coords[i], y_coords[i]])
-                    layer_provider.addFeature(feature)
-            
-                    layer.updateExtents()
-                    i += 1
-                
-                QgsProject.instance().addMapLayer(layer)
-                
-            elif self.checkBox_strefa_8.isChecked():
-                x_coords = []
-                y_coords = []
-                with open(file_path, 'r') as file:
-                    for line in file:
-                        parts = line.split()
-                        x = float(parts[0])
-                        y = float(parts[1])
-                        x_coords.append(x)
-                        y_coords.append(y)
+                        QgsProject.instance().addMapLayer(layer)
                         
-                layer = QgsVectorLayer('Point?crs=EPSG:2179', 'wgrane_punkty', 'memory')
-        
-                coords = list(zip(x_coords, y_coords))
-                n = len(coords)
-                i = 0
-        
-                layer_provider = layer.dataProvider()
-                layer_provider.addAttributes([QgsField('nr', QVariant.String), QgsField('x', QVariant.Int),QgsField('y', QVariant.Int)])
-                layer.updateFields()
-                for i in range(n):
-                    feature = QgsFeature()
-                    feature.setGeometry(QgsGeometry.fromPointXY(QgsPointXY(float(x_coords[i]), float(y_coords[i]))))
-                    feature.setAttributes([f'Punkt {i+1}', x_coords[i], y_coords[i]])
-                    layer_provider.addFeature(feature)
-            
-                    layer.updateExtents()
-                    i += 1
+                    elif self.checkBox_strefa_7.isChecked():
+                        x_coords = []
+                        y_coords = []
+                        with open(file_path, 'r') as file:
+                            for line in file:
+                                parts = line.split()
+                                x = float(parts[0])
+                                y = float(parts[1])
+                                x_coords.append(x)
+                                y_coords.append(y)
+                                
+                        layer = QgsVectorLayer('Point?crs=EPSG:2178', 'wgrane_punkty', 'memory')
                 
-                QgsProject.instance().addMapLayer(layer)
+                        coords = list(zip(x_coords, y_coords))
+                        n = len(coords)
+                        i = 0
+                
+                        layer_provider = layer.dataProvider()
+                        layer_provider.addAttributes([QgsField('nr', QVariant.String), QgsField('x', QVariant.Int),QgsField('y', QVariant.Int)])
+                        layer.updateFields()
+                        for i in range(n):
+                            feature = QgsFeature()
+                            feature.setGeometry(QgsGeometry.fromPointXY(QgsPointXY(float(x_coords[i]), float(y_coords[i]))))
+                            feature.setAttributes([f'Punkt {i+1}', x_coords[i], y_coords[i]])
+                            layer_provider.addFeature(feature)
+                    
+                            layer.updateExtents()
+                            i += 1
+                        
+                        QgsProject.instance().addMapLayer(layer)
+                        
+                    elif self.checkBox_strefa_8.isChecked():
+                        x_coords = []
+                        y_coords = []
+                        with open(file_path, 'r') as file:
+                            for line in file:
+                                parts = line.split()
+                                x = float(parts[0])
+                                y = float(parts[1])
+                                x_coords.append(x)
+                                y_coords.append(y)
+                                
+                        layer = QgsVectorLayer('Point?crs=EPSG:2179', 'wgrane_punkty', 'memory')
+                
+                        coords = list(zip(x_coords, y_coords))
+                        n = len(coords)
+                        i = 0
+                
+                        layer_provider = layer.dataProvider()
+                        layer_provider.addAttributes([QgsField('nr', QVariant.String), QgsField('x', QVariant.Int),QgsField('y', QVariant.Int)])
+                        layer.updateFields()
+                        for i in range(n):
+                            feature = QgsFeature()
+                            feature.setGeometry(QgsGeometry.fromPointXY(QgsPointXY(float(x_coords[i]), float(y_coords[i]))))
+                            feature.setAttributes([f'Punkt {i+1}', x_coords[i], y_coords[i]])
+                            layer_provider.addFeature(feature)
+                    
+                            layer.updateExtents()
+                            i += 1
+                        
+                        QgsProject.instance().addMapLayer(layer)
                 
         
         
