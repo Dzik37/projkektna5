@@ -25,7 +25,11 @@
 import os
 
 from qgis.PyQt import uic
-from qgis.PyQt import QtWidgets
+from qgis.PyQt import QtWidgets, QtCore
+from qgis.core import QgsGeometry
+
+
+
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -43,6 +47,10 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
         self.pushButton_dh.clicked.connect(self.calculate_dh)
+        self.pushButton_pole.clicked.connect(self.oblicz_pole)
+        # self.checkBox_m2.stateChanged.connect(self.onCheckBoxChanged)
+        # self.checkBox_ary.stateChanged.connect(self.onCheckBoxChanged)
+        # self.checkBox_ha.stateChanged.connect(self.onCheckBoxChanged)
     
     def calculate_dh(self):
         selected_layer = self.mMapLayerComboBox.currentLayer()
@@ -59,6 +67,49 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
             dh = h_2 - h_1 
             self.label_dh_result.setText(f'{dh}m')
 
+    def oblicz_pole(self):
+        selected_layer = self.mMapLayerComboBox.currentLayer()
+        features = selected_layer.selectedFeatures()
+        wsp_x = []
+        wsp_y = []
+        for feature in features:
+            geom = feature.geometry()
+            point = geom.asPoint()
+            wsp_x.append(float(point.x()))
+            wsp_y.append(float(point.y()))
+            
+        if len(wsp_x) < 3:
+            self.label_pole_result.setText("Wybierz co najmniej 3 punkty!")
+        else:
+            coords = list(zip(wsp_x, wsp_y))
+                
+            n = len(coords)
+            suma = 0
+            
+            for i in range(n):
+                x1, y1 = coords[i]
+                x2, y2 = coords[(i + 1) % n]
+                suma += x1 * y2 - x2 * y1
+            
+            pole_m2 = 0.5 * abs(suma)
+            pole_a = pole_m2 / 100
+            pole_ha = pole_m2 / 10000 
+            self.label_pole_result.setText(f'{pole_m2} m² ')
+        
+        # def onCheckBoxChanged(self, state):
+        #     if state == QtCore.Qt.Checked:
+        #         if self.checkBox_m2.isChecked():
+        #             self.label_pole_result.setText(f'{pole_m2} m²')
+        #         elif self.checkBox_a.isChecked():
+        #             self.label_pole_result.setText(f'{pole_a} a ')
+        #         elif self.checkBox_ha.isChecked():
+        #             self.label_pole_result.setText(f'{pole_ha} ha')
+        
+
+        
+        
+        
+        
         
         
         

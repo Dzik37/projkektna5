@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_ProjektIG2DialogBase(object):
     def setupUi(self, ProjektIG2DialogBase):
         ProjektIG2DialogBase.setObjectName("ProjektIG2DialogBase")
-        ProjektIG2DialogBase.resize(613, 519)
+        ProjektIG2DialogBase.resize(614, 519)
         self.button_box = QtWidgets.QDialogButtonBox(ProjektIG2DialogBase)
         self.button_box.setGeometry(QtCore.QRect(240, 470, 341, 32))
         self.button_box.setOrientation(QtCore.Qt.Horizontal)
@@ -54,7 +54,10 @@ class Ui_ProjektIG2DialogBase(object):
         self.label_dh_result.setText("")
         self.label_dh_result.setObjectName("label_dh_result")
         self.label_pole_result = QtWidgets.QLabel(ProjektIG2DialogBase)
-        self.label_pole_result.setGeometry(QtCore.QRect(340, 150, 241, 41))
+        self.label_pole_result.setGeometry(QtCore.QRect(330, 150, 271, 41))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_pole_result.setFont(font)
         self.label_pole_result.setText("")
         self.label_pole_result.setObjectName("label_pole_result")
         self.label_dh_select = QtWidgets.QLabel(ProjektIG2DialogBase)
