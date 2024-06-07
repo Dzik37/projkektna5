@@ -27,6 +27,9 @@ import os
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets, QtCore
 from qgis.core import QgsGeometry
+from qgis.core import QgsProject
+from qgis.core import QgsProject, QgsVectorLayer, QgsField, QgsPointXY, QgsGeometry, QgsFeature
+from qgis.PyQt.QtCore import QVariant
 
 
 
@@ -49,6 +52,7 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
         self.pushButton_dh.clicked.connect(self.calculate_dh)
         self.pushButton_pole.clicked.connect(self.oblicz_pole)
         self.pushButton_clear.clicked.connect(self.czysc)
+        self.mQgsFileWidget.fileChanged.connect(self.wczytywanie_pliku)
 
         
         
@@ -174,8 +178,33 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
         self.checkBox_ha.setChecked(False)
         self.label_wyb_pkt.clear()
             
+    def wczytywanie_pliku(self, file_path):
+        x_coords = []
+        y_coords = []
+        with open(file_path, 'r') as file:
+            for line in file:
+                parts = line.split()
+                x = float(parts[0])
+                y = float(parts[1])
+                x_coords.append(x)
+                y_coords.append(y)
+                
+        layer = QgsVectorLayer('Point?crs=EPSG:4326', 'Nowa warstwa', 'memory')
+        
+        layer_provider = layer.dataProvider()
+        layer_provider.addAttributes([QgsField('nazwa', QVariant.String), QgsField('wartosc', QVariant.Int)])
+        layer.updateFields()
+        
+        feature = QgsFeature()
+        feature.setGeometry(QgsGeometry.fromPointXY(QgsPointXY(19.9449799, 50.0646501)))  # Przykładowy punkt w Krakowie
+        feature.setAttributes(['Punkt 1', 123])
+        layer_provider.addFeature(feature)
+
+        layer.updateExtents()
 
         
+        QgsProject.instance().addMapLayer(layer)
+                
         
         
         
