@@ -68,6 +68,11 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
 
         
     def oblicz_pole(self, state):
+        if self.checkBox_m2.isChecked() and (self.checkBox_ary.isChecked() or self.checkBox_ha.isChecked()):
+            self.label_pole_result.setText('Wybierz tylko jedną jednostkę.')
+        elif self.checkBox_ary.isChecked() and self.checkBox_ha.isChecked():
+            self.label_pole_result.setText('Wybierz tylko jedną jednostkę.')
+        else:
             if self.checkBox_m2.isChecked():
                 selected_layer = self.mMapLayerComboBox.currentLayer()
                 features = selected_layer.selectedFeatures()
