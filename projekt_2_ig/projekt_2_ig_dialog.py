@@ -66,7 +66,8 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
             nr1 = features[0]['nr_punktu']
             nr2 = features[1]['nr_punktu']
             dh = h_2 - h_1 
-            self.label_dh_result.setText(f'Roznica wysoksoci miedy punktami : {nr2} a {nr1} wynosi {dh}m')
+            self.label_dh_result.setText(f'{dh}m')
+            self.label_wyb_pkt.setText(f'Wybrane punkty : {nr2},{nr1} ')
 
     # def oblicz_pole(self):
     #     selected_layer = self.mMapLayerComboBox.currentLayer()
@@ -125,7 +126,8 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
                         suma += x1 * y2 - x2 * y1
                     
                     pole_m2 = 0.5 * abs(suma)
-                    self.label_pole_result.setText(f'Pole punktow {nr_pkt} wynosi {round(pole_m2,3)} m² ')
+                    self.label_pole_result.setText(f'{round(pole_m2,3)} m² ')
+                    self.label_wyb_pkt.setText(f'Wybrane punkty: {nr_pkt}')
                     
             elif self.checkBox_ary.isChecked():
                 selected_layer = self.mMapLayerComboBox.currentLayer()
@@ -155,8 +157,9 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
                     
                     pole_m2 = 0.5 * abs(suma)
                     pole_a = pole_m2 / 100
-                    self.label_pole_result.setText(f'Pole punktow {nr_pkt} wynosi {round(pole_a,3)} a ')
-                
+                    self.label_pole_result.setText(f'{round(pole_a,3)} a ')
+                    self.label_wyb_pkt.setText(f'Wybrane punkty: {nr_pkt}')
+                    
             elif self.checkBox_ha.isChecked():
                 selected_layer = self.mMapLayerComboBox.currentLayer()
                 features = selected_layer.selectedFeatures()
@@ -185,7 +188,8 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
                     
                     pole_m2 = 0.5 * abs(suma)
                     pole_ha = pole_m2 / 10000 
-                    self.label_pole_result.setText(f'Pole punktow {nr_pkt} wynosi {round(pole_ha,3)} ha ')
+                    self.label_pole_result.setText(f'{round(pole_ha,3)} ha ')
+                    self.label_wyb_pkt.setText(f'Wybrane punkty: {nr_pkt}')
         
     def czysc(self):
         self.label_dh_result.clear()
@@ -193,8 +197,7 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
         self.checkBox_m2.setChecked(False)
         self.checkBox_ary.setChecked(False)
         self.checkBox_ha.setChecked(False)
-        self.label_h_error.clear()  
-        self.label_error.clear()
+        self.label_wyb_pkt.clear()
             
         
         
