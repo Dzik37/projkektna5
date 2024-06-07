@@ -79,6 +79,21 @@ class Ui_ProjektIG2DialogBase(object):
         self.label_wyb_pkt.setFont(font)
         self.label_wyb_pkt.setText("")
         self.label_wyb_pkt.setObjectName("label_wyb_pkt")
+        self.mQgsFileWidget = QgsFileWidget(ProjektIG2DialogBase)
+        self.mQgsFileWidget.setGeometry(QtCore.QRect(140, 270, 431, 51))
+        self.mQgsFileWidget.setObjectName("mQgsFileWidget")
+        self.pushButton_punkty = QtWidgets.QPushButton(ProjektIG2DialogBase)
+        self.pushButton_punkty.setGeometry(QtCore.QRect(10, 320, 251, 41))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.pushButton_punkty.setFont(font)
+        self.pushButton_punkty.setObjectName("pushButton_punkty")
+        self.label = QtWidgets.QLabel(ProjektIG2DialogBase)
+        self.label.setGeometry(QtCore.QRect(20, 280, 111, 31))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label.setFont(font)
+        self.label.setObjectName("label")
 
         self.retranslateUi(ProjektIG2DialogBase)
         self.button_box.accepted.connect(ProjektIG2DialogBase.accept) # type: ignore
@@ -96,6 +111,9 @@ class Ui_ProjektIG2DialogBase(object):
         self.label_dh_select.setText(_translate("ProjektIG2DialogBase", "Wybierz warstwę"))
         self.pushButton_clear.setText(_translate("ProjektIG2DialogBase", "Wyczysc wyniki"))
         self.pushButton.setText(_translate("ProjektIG2DialogBase", "Utworz poligon"))
+        self.pushButton_punkty.setText(_translate("ProjektIG2DialogBase", "Wgraj punkty"))
+        self.label.setText(_translate("ProjektIG2DialogBase", "Wybierz plik"))
+from qgsfilewidget import QgsFileWidget
 from qgsmaplayercombobox import QgsMapLayerComboBox
 
 

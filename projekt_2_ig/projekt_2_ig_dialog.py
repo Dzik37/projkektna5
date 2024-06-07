@@ -49,6 +49,7 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
         self.pushButton_dh.clicked.connect(self.calculate_dh)
         self.pushButton_pole.clicked.connect(self.oblicz_pole)
         self.pushButton_clear.clicked.connect(self.czysc)
+
         
         
     def calculate_dh(self):
@@ -173,10 +174,7 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
         self.checkBox_ha.setChecked(False)
         self.label_wyb_pkt.clear()
             
-        
-        
-        
-        
+
         
         
         
