@@ -51,7 +51,9 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
         # self.checkBox_m2.stateChanged.connect(self.onCheckBoxChanged)
         # self.checkBox_ary.stateChanged.connect(self.onCheckBoxChanged)
         # self.checkBox_ha.stateChanged.connect(self.onCheckBoxChanged)
-    
+        self.pushButton_clear.clicked.connect(self.czysc)
+        
+        
     def calculate_dh(self):
         selected_layer = self.mMapLayerComboBox.currentLayer()
         features = selected_layer.selectedFeatures()
@@ -104,7 +106,15 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
         #         elif self.checkBox_ha.isChecked():
         #             self.label_pole_result.setText(f'{pole_ha} ha')
         
-
+    def czysc(self):
+        self.label_dh_result.clear()
+        self.label_pole_result.clear()
+        self.checkBox_m2.setChecked(False)
+        self.checkBox_a.setChecked(False)
+        self.checkBox_ha.setChecked(False)
+        self.label_h_error.clear()  # Wyczyść komunikat o błędzie
+        self.label_error.clear()
+            
         
         
         
