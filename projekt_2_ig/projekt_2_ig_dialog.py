@@ -188,7 +188,9 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
         self.checkBox_strefa_7.setChecked(False)
         self.checkBox_strefa_8.setChecked(False)
         self.label_poligon.clear()
-        
+        self.mQgsFileWidget.setFilePath("")
+        self.mMapLayerComboBox.clear()
+    
     
     def wstaw_punkty(self):
         file_path = self.mQgsFileWidget.filePath()
