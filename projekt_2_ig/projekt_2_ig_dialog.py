@@ -28,7 +28,7 @@ from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets, QtCore
 from qgis.core import QgsGeometry
 from qgis.core import QgsProject
-from qgis.core import QgsProject, QgsVectorLayer, QgsField, QgsPointXY, QgsGeometry, QgsFeature
+from qgis.core import QgsProject, QgsVectorLayer, QgsField, QgsPointXY, QgsGeometry, QgsFeature, QgsFields, QgsPoint, QgsPolygon
 from qgis.PyQt.QtCore import QVariant
 
 
@@ -365,25 +365,35 @@ class ProjektIG2Dialog(QtWidgets.QDialog, FORM_CLASS):
     def poligon(self):
           
         selected_layer = self.mMapLayerComboBox.currentLayer()
-
-    
         features = selected_layer.selectedFeatures()
 
         points = []
 
-
-        for feature in features:
-            geom = feature.geometry()
-            point = geom.asPoint()
-            points.append(point)
-
-
+        points = [feature.geometry().asPoint() for feature in features]
+        
+        points.append(points[0])
+        
         polygon = QgsGeometry.fromPolygonXY([points])
-
+        
+        crs = selected_layer.crs().authid()
+        new_layer = QgsVectorLayer(f'Polygon?crs={crs}', 'Poligon', 'memory')
+        
+        new_layer_data_provider = new_layer.dataProvider()
+        new_layer_data_provider.addAttributes([QgsField("id", QVariant.Int)])
+        new_layer.updateFields()
+        
+        new_feature = QgsFeature()
+        new_feature.setGeometry(polygon)
+        new_feature.setAttributes([1])
+        
+        new_layer_data_provider.addFeatures([new_feature])
+        new_layer.updateExtents()
+        
+        QgsProject.instance().addMapLayer(new_layer)
 
         area = polygon.area()
 
-        self.label_poligon.setText(f'Pole poligonu {area} m2')
+        self.label_poligon.setText(f'Pole poligonu {round(area,3)} m2')
                 
         
         
