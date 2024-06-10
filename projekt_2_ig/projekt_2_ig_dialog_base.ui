@@ -180,7 +180,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Wyczysc wyniki</string>
+    <string>Wyczyść wyniki</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_poligon">
@@ -193,7 +193,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Utworz poligon</string>
+    <string>Utwórz poligon</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_wyb_pkt">
